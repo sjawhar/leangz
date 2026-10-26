@@ -60,7 +60,7 @@ run_cmd modifyEnv (floatsExt.addEntry · ⟨#[1.5]⟩)
 run_cmd modifyEnv (floatsExt.addEntry · ⟨#[1.5, 2.5, 3.5]⟩)
 ```
 
-- `StringNul.olean` - A module whose `.olean` holds strings that contain the character U+0000 (7.6K)
+- `StringNul.olean` - A module whose `.olean` holds strings that contain the character U+0000 (7.7K)
 
 `StringNul.olean` was built with Lean 4.34.1 (`lean -o`) from `StringNul.lean`:
 
