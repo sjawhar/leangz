@@ -161,3 +161,28 @@ fn test_wide_scalar_array_roundtrip() {
     ".olean with a wide scalar array does not match after compression/decompression"
   );
 }
+
+/// `StringNul.olean` defines string literals that contain the character U+0000:
+/// one at the end (`"/sbin/reboot\x00"`), several inside a string with a
+/// multi-byte character after them, and one alone. Lean stores each with its
+/// byte size, so the NUL bytes are part of the string, not its end.
+#[test]
+fn test_string_with_nul_roundtrip() {
+  let test_data_dir = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/module");
+
+  let olean =
+    fs::read(format!("{}/StringNul.olean", test_data_dir)).expect("Failed to read .olean file");
+
+  let mut compressed = Vec::new();
+  leangz::lgz::compress(&[&olean], &mut compressed);
+
+  let (decompressed_buf, ranges) = leangz::lgz::decompress(Cursor::new(&compressed), 1);
+
+  assert_eq!(ranges.len(), 1, "Expected 1 range for 1 file");
+
+  assert_eq!(
+    olean,
+    &decompressed_buf[ranges[0].clone()],
+    ".olean with NUL characters in strings does not match after compression/decompression"
+  );
+}

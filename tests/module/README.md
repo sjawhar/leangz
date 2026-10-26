@@ -60,6 +60,16 @@ run_cmd modifyEnv (floatsExt.addEntry · ⟨#[1.5]⟩)
 run_cmd modifyEnv (floatsExt.addEntry · ⟨#[1.5, 2.5, 3.5]⟩)
 ```
 
+- `StringNul.olean` - A module whose `.olean` holds strings that contain the character U+0000 (7.6K)
+
+`StringNul.olean` was built with Lean 4.34.1 (`lean -o`) from `StringNul.lean`:
+
+```lean
+def trailingNul : String := "/sbin/reboot\x00"
+def interiorNul : String := "a\x00b\x00\x00é"
+def onlyNul : String := "\x00"
+```
+
 ## Running the Test
 
 ```bash
@@ -74,12 +84,13 @@ cargo test --test module_compression -- --nocapture
 
 ## Test Structure
 
-The test is located in `tests/module_compression.rs` and includes four tests:
+The test is located in `tests/module_compression.rs` and includes five tests:
 
 1. **`test_single_olean_roundtrip`** - Tests single file compression
 2. **`test_module_roundtrip`** - Tests module (3-file) compression
 3. **`test_scalar_array_roundtrip`** - Tests single file compression of an `.olean` holding a scalar array
 4. **`test_wide_scalar_array_roundtrip`** - Tests single file compression of an `.olean` holding scalar arrays with 8-byte elements
+5. **`test_string_with_nul_roundtrip`** - Tests single file compression of an `.olean` holding strings with NUL characters
 
 ## Expected Behavior
 
